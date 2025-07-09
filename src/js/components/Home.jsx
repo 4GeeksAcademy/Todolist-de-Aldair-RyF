@@ -59,8 +59,24 @@ const Home = () => {
     });
 		}
 	}
-	const deleteTask = (index) => {
-		setTasks(tasks.filter((item, i) => index != i))
+	const deleteTask = (id) => {
+		// setTasks(tasks.filter((item, i) => index != i))
+
+    fetch('https://playground.4geeks.com/todo/todos/'+ id, {
+      method: "DELETE",
+    })
+    .then(resp => {
+        console.log(resp.ok);
+        if (resp.ok){
+          onload()
+        } // Será true si la respuesta es exitosa
+        console.log(resp.status); // El código de estado 201, 300, 400, etc.
+        return resp.json(); // Intentará parsear el resultado a JSON y retornará una promesa donde puedes usar .then para seguir con la lógica
+    })
+    .catch(error => {
+        // Manejo de errores
+        console.log(error);
+    });
 	}
 	const Tarea = ({ descripcion, onDelete }) => {
 		const [isHover, setIsHover] = useState(false)
@@ -83,7 +99,7 @@ const Home = () => {
 				</div>
 
 				{tasks.map((tarea, index) => {
-					return (<Tarea key={index} descripcion={tarea.label} onDelete={() => deleteTask(index)} />)
+					return (<Tarea key={index} descripcion={tarea.label} onDelete={() => deleteTask(tarea.id)} />)
 				})
 				}
 			</div>
