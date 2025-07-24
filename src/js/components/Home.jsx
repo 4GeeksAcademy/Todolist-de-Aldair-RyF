@@ -8,19 +8,43 @@ const Home = () => {
   
   const apiUrl = "https://playground.4geeks.com/todo/users/alda"
 
+  const crearusuario = () => {
+    fetch(apiUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        
+      }),
+      headers: {
+        "Content-Type": "application/json"
+    }})
+    .then(resp => {
+        console.log(resp.ok);
+        if (resp.ok){
+          onload()
+          
+        } // Será true si la respuesta es exitosa
+        console.log(resp.status); // El código de estado 201, 300, 400, etc.
+        return resp.json(); // Intentará parsear el resultado a JSON y retornará una promesa donde puedes usar .then para seguir con la lógica
+    })
+    
+  }  
+
 	const [tasks, setTasks] = useState([])
 
 	const [createTask, setCreateTask] = useState("");
 
-  const onload = () => {
+  const onload = () => { 
     fetch(apiUrl).then(Response =>{
+      if (!Response.ok ){
+        crearusuario()
+      }
       return Response.json()
     }).then(datos => {
       setTasks(datos.todos)
     })
   }
 
-  useEffect(onload, []) 
+  useEffect(onload, [])
 
 	let addTask = (tecla) => {
 		if (tecla === "Enter") {
